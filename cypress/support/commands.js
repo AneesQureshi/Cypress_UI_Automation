@@ -30,3 +30,33 @@ Cypress.Commands.add('generateRandomUser', () => {
   const email = `${randomStr}@mail.com`;
   return { name, email };
 });
+
+Cypress.Commands.add('appendUserToFixture', (newUser) => {
+  const filePath = 'cypress/fixtures/generatedUser.json';
+  let newArray;
+
+  cy.readFile(filePath, { log: false, timeout: 1000 })
+    .then((data) => {
+            cy.log('📄 Before append:', JSON.stringify(data, null, 2));
+      let usersArray = [];
+
+      if (Array.isArray(data)) {
+        usersArray = data;
+      } else if (typeof data === 'object' && data !== null) {
+      
+        usersArray = [data];
+      }
+
+      usersArray.push(newUser);
+ newArray=[...usersArray]
+       cy.log('✅ After append:', JSON.stringify(usersArray, null, 2));
+     cy.log('✅ After append:', JSON.stringify(newArray, null, 2));
+
+     
+      cy.writeFile(filePath, newArray, { log: false });
+    })
+    .then(null, () => {
+      
+      cy.writeFile(filePath, newArray, { log: false });
+    });
+});

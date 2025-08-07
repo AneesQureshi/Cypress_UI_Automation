@@ -14,26 +14,17 @@ describe("Registration", function () {
     const signupdetails = new SignupDetailsPage()
     const signupAddress = new SignupAddressPage()
     const homePagedetails = new homePage()
-    // const addressDetails = {
-    //     firstName: 'Anish',
-    //     lastName: 'Qureshi',
-    //     company: 'Aalda vet india pvt ltd',
-    //     address1: 'H-7, Market, Shakurpur',
-    //     address2: 'Near Chowdhary Medicos',
-    //     country: 'India',
-    //     state: 'Delhi',
-    //     city: 'New Delhi',
-    //     zipcode: '110034',
-    //     mobile: '9718494456'
-    // };
+ 
 
     let sharedUser;
     let name
     let email
     let addressDetails; 
 
+
     beforeEach(() => {
         const util = new Util();
+
         cy.fixture("addressDetails").then((data) => {
       addressDetails = data;
     });
@@ -41,11 +32,12 @@ describe("Registration", function () {
             sharedUser = user;
             name = sharedUser.name
             email = sharedUser.email
+            cy.appendUserToFixture(user);
         });
     });
 
 
-    it('Signup with valid credentials', function () {
+    it.only('Signup with valid credentials', function () {
 
         //first page
         register.visit();

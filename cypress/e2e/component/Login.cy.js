@@ -26,7 +26,7 @@ describe("Login", function () {
         login.verifyLogoutLink('Logout')
 
     })
-    it.only('Login with invalid credentials', function () {
+    it('Login with invalid credentials', function () {
 
         //first page
         login.visit();
