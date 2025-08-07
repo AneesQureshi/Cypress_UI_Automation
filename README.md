@@ -1,2 +1,0 @@
-# Cypress_UI_Automation
-Cypress_UI_Automation
