@@ -5,5 +5,6 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
        experimentalSessionAndOrigin: true
     },
+    downloadsFolder: 'cypress/downloads' // <-- custom folder
   },
 });

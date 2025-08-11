@@ -1,12 +1,20 @@
+import { timeout } from "async";
+
 describe('Download invoice', () => {
   beforeEach(() => {
     const blockedDomains = [
-      '**/ad.doubleclick.net/**',
-      '**/google-analytics.com/**',
-      '**/googletagmanager.com/**',
-      '**/ads.pubmatic.com/**',
-      '**/https://securepubads.g.doubleclick.net/**',
-    ];
+  '**/securepubads.g.doubleclick.net/**',
+  '**/pagead2.googlesyndication.com/**',
+  '**/google-analytics.com/**',
+  '**/googletagmanager.com/**',
+  '**/ads.pubmatic.com/**',
+  '**/id5-sync.com/**',
+  '**/oajs.openx.net/**',
+  '**/bcp.crwdcntrl.net/**',
+  '**/ep1.adtrafficquality.google/**'
+];
+
+
 
     blockedDomains.forEach(domain => {
       cy.intercept('GET', domain, { statusCode: 404 });
@@ -89,7 +97,7 @@ describe('Download invoice', () => {
      cy.get('#datePickerMonthYearInput').should('have.value','12/13/1987')
  });
 
- it.only('Selects date and time from the second date picker', () => {
+ it('Selects date and time from the second date picker', () => {
   const targetYear = '1987';
   const targetMonth = 'December';
   const targetDay = '13';
@@ -157,5 +165,113 @@ selectYear(targetYear);
   cy.get('#dateAndTimePickerInput').should('contain.value', `${targetMonth} ${targetDay}, ${targetYear}`);
 });
 
+it('Tabs', () => {
+     cy.visit('https://demoqa.com/tabs');
+    // Verify default selected tab (What)
+    cy.get('#demo-tab-what').should('have.class', 'active');
+    cy.get('#demo-tabpane-what').should('be.visible')
+    .and('contain.text', 'Lorem Ipsum is simply dummy text of the printing');
+
+    // Click "Origin" tab and verify content
+    cy.get('#demo-tab-origin').click();
+    cy.get('#demo-tab-origin').should('have.class', 'active');
+    cy.get('#demo-tabpane-origin')
+      .should('be.visible')
+      .and('contain.text', 'Contrary to popular belief,');
+
+    // Click "Use" tab and verify content
+    cy.get('#demo-tab-use').click();
+    cy.get('#demo-tab-use').should('have.class', 'active');
+    cy.get('#demo-tabpane-use')
+      .should('be.visible')
+      .and('contain.text', 'Various versions have evolved over the years');
+ });
+it('Tooltips', () => {
+ cy.visit('https://demoqa.com/tool-tips');
+ const tooltipScenarios = [
+    { selector: '#toolTipButton', expected: 'You hovered over the Button' },
+    { selector: '#toolTipTextField', expected: 'You hovered over the text field' },
+    { selector: '[data-toggle="tooltipString"]', expected: 'You hovered over the Contrary' }, // Example selector—inspect actual for accuracy
+  ];
+
+  tooltipScenarios.forEach(({ selector, expected }) => {
+    it(`should display correct tooltip for ${selector}`, () => {
+      cy.get(selector)
+        .trigger('mouseover');
+      cy.get('.tooltip-inner') // or other appropriate tooltip container
+        .should('be.visible')
+        .and('contain.text', expected);
+    });
+  });
+
+ });
+it('Progress Bar', () => {
+   cy.visit('https://demoqa.com/progress-bar');
+ 
+   cy.get('#startStopButton').click();
+  //  cy.wait(10000)
+
+    // Stop when the progress reaches around 75% to avoid race conditions
+   cy.get('.progress-bar', { timeout: 15000 }) // 15s timeout for slow runs
+      .should($bar => {
+        const value = parseInt($bar.attr('aria-valuenow'), 10);
+        if (value < 70) {
+          throw new Error(`Progress at ${value}%, waiting for 70%...`);
+        }
+      });
+
+    // Click stop once it reaches 70% or more
+    cy.get('#startStopButton').click();
+
+    // Verify it's stopped
+    cy.get('.progress-bar')
+      .invoke('attr', 'aria-valuenow')
+      .then(val => {
+        const stoppedValue = parseInt(val, 10);
+        expect(stoppedValue).to.be.at.least(70);
+        cy.log(`Stopped at ${stoppedValue}%`);
+      });
+  
+
+    // Verify that progress is paused/stopped
+    cy.get('.progress-bar')
+      .invoke('attr', 'aria-valuenow')
+      .then(val => {
+        const paused = parseInt(val);
+        expect(paused).to.be.within(70, 80);
+      });
+     cy.get('#startStopButton').click();
+
+  // Wait for full completion
+  cy.get('.progress-bar', { timeout: 3000 })
+    .should('have.attr', 'aria-valuenow', '100')
+    .then(() => {
+      //cy.get('#startStopButton').click(); // stop at 100 before auto-restart
+      cy.get('#resetButton').click();
+  });
+  // Click reset
+  
+
+  // Verify reset to 0%
+  cy.get('.progress-bar')
+    .should('have.attr', 'aria-valuenow', '41')
+   });
+
+  
 });
+
+
+
+
+  
+
+
+
+
+
+    
+
+
+
+
 

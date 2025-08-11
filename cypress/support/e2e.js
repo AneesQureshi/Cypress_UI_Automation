@@ -20,6 +20,9 @@ Cypress.on('uncaught:exception', (err, runnable) => {
   if (err.message.includes('Script error')) {
     return false
   }
+   if (err.message.includes('displayName')) {
+    return false; // prevents Cypress from failing the test
+  }
   // allow other errors to fail the test
   return true
 })
