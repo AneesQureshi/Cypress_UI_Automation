@@ -23,6 +23,9 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import 'cypress-file-upload';
+
+import Login from "./pages/Login";  
 
 Cypress.Commands.add('generateRandomUser', () => {
   const randomStr = Math.random().toString(36).substring(2, 10);
@@ -30,7 +33,14 @@ Cypress.Commands.add('generateRandomUser', () => {
   const email = `${randomStr}@mail.com`;
   return { name, email };
 });
+Cypress.Commands.add('LoginFunc',()=>{
+  const login =new Login()
+        login.visit();
+        login.enterEmail('muhammadanish201111@gmail.com')
+        login.enterPassword('12345678')
+        login.clickLogin();
 
+})
 Cypress.Commands.add('appendUserToFixture', (newUser) => {
   const filePath = 'cypress/fixtures/generatedUser.json';
   let newArray;

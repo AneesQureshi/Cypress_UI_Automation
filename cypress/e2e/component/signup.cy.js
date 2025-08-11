@@ -37,7 +37,7 @@ describe("Registration", function () {
     });
 
 
-    it.only('Signup with valid credentials', function () {
+    it('Signup with valid credentials', function () {
 
         //first page
         register.visit();

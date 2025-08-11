@@ -1,7 +1,7 @@
 class Login{
 
     visit(){
-        cy.visit('https://automationexercise.com/login')
+        cy.visit('https://automationexercise.com/login')    
     }
 
     enterEmail(email){

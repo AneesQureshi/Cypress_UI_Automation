@@ -1,6 +1,7 @@
 {
   "devDependencies": {
-    "cypress": "^14.5.3"
+    "cypress": "^14.5.3",
+    "cypress-file-upload": "^5.0.8"
   },
   "name": "cypress_ui_automation",
   "version": "1.0.0",
