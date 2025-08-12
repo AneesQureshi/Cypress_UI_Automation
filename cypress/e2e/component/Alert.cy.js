@@ -1,6 +1,25 @@
 describe('DemoQA Alerts handling', () => {
   
   beforeEach(() => {
+    const blockedDomains = [
+      '**/securepubads.g.doubleclick.net/**',
+    '**/pagead2.googlesyndication.com/**',
+    '**/google-analytics.com/**',
+    '**/googletagmanager.com/**',
+    '**/ads.pubmatic.com/**',
+    '**/id5-sync.com/**',
+    '**/oajs.openx.net/**',
+    '**/bcp.crwdcntrl.net/**',
+    '**/ep1.adtrafficquality.google/**',
+    '**/gumi.criteo.com/**',
+    '**/serving.stat-rock.com/**',
+    '**/securepubads.g.doubleclick.net/gampad/ads**',
+    '**/oajs.openx.net/esp**'
+    ];
+
+    blockedDomains.forEach(domain => {
+      cy.intercept(domain, { statusCode: 404 });
+    });
     cy.visit('https://demoqa.com/alerts');
   });
 

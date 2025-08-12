@@ -1,0 +1,75 @@
+
+<html>
+<head>
+  <title>Cypress Intercept Demo</title>
+  <style>
+    .loading-spinner { color: blue; }
+    .error-message { color: red; }
+    .product-item, .user-item { margin: 5px 0; }
+  </style>
+</head>
+<body>
+
+<h1>Products</h1>
+<div class="loading-spinner" style="display:none;">Loading...</div>
+<div class="error-message" style="display:none;"></div>
+<div class="product-list"></div>
+<button class="next-page-btn">Next Page</button>
+
+<h1>Add User</h1>
+<input id="name-input" placeholder="Enter name" />
+<button id="submit-btn">Add User</button>
+<div class="user-list"></div>
+
+<script>
+  async function fetchProducts(url) {
+    document.querySelector('.loading-spinner').style.display = 'block';
+    document.querySelector('.error-message').style.display = 'none';
+    document.querySelector('.product-list').innerHTML = '';
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      document.querySelector('.loading-spinner').style.display = 'none';
+      if (!res.ok) throw new Error(data.message || 'Error');
+      data.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'product-item';
+        div.textContent = item.name;
+        document.querySelector('.product-list').appendChild(div);
+      });
+    } catch (err) {
+      document.querySelector('.loading-spinner').style.display = 'none';
+      document.querySelector('.error-message').textContent = err.message;
+      document.querySelector('.error-message').style.display = 'block';
+    }
+  }
+
+  async function addUser(name) {
+    const res = await fetch('/api/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name })
+    });
+    const data = await res.json();
+    const div = document.createElement('div');
+    div.className = 'user-item';
+    div.textContent = data.name;
+    document.querySelector('.user-list').appendChild(div);
+  }
+
+  // Call the functions inside normal event handlers
+  fetchProducts('/api/products?page=1');
+
+  document.querySelector('.next-page-btn').addEventListener('click', () => {
+    fetchProducts('/api/products?page=2');
+  });
+
+  document.querySelector('#submit-btn').addEventListener('click', () => {
+    const name = document.querySelector('#name-input').value;
+    addUser(name);
+  });
+</script>
+
+
+</body>
+</html>
