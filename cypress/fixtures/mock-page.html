@@ -1,0 +1,9 @@
+<script>
+  console.log('Triggering fetch to https://dummyjson.com/products/1')
+  fetch('https://dummyjson.com/products/1')
+    .then(res => res.json())
+    .then(data => {
+      console.log('Response in browser:', data)
+      document.body.innerHTML = '<h1>' + data.title + '</h1>'
+    })
+</script>
