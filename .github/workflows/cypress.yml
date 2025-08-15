@@ -8,74 +8,100 @@ on:
   workflow_dispatch: # manual trigger
 
 jobs:
-  cypress-tests:
+  login-tests:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Checkout repository
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js 22
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      # 3. Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      # 4. Clean and create report folder
-      - name: Prepare report folder
+      - name: Run Login spec
         run: |
-          rm -rf cypress/reports || true
           mkdir -p cypress/reports
-
-      # 5. Run Cypress tests for Login and Products specs
-      - name: Run Cypress tests
-        run: |
           npx cypress run --spec "cypress/e2e/component/Login.cy.js" \
-              --reporter mochawesome \
-              --reporter-options "reportDir=cypress/reports,overwrite=false,html=true,json=true"
-          npx cypress run --spec "cypress/e2e/component/Products.cy.js" \
-              --reporter mochawesome \
-              --reporter-options "reportDir=cypress/reports,overwrite=false,html=true,json=true"
+            --reporter mochawesome \
+            --reporter-options reportDir=cypress/reports,overwrite=false,html=false,json=true
 
-      # 6. Wait for valid JSON files
-      - name: Wait for valid JSON files
+      - name: Upload Login JSON
+        uses: actions/upload-artifact@v4
+        with:
+          name: login-json
+          path: cypress/reports/*.json
+
+  products-tests:
+    runs-on: ubuntu-latest
+    needs: login-tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Products spec
         run: |
-          echo "Waiting for valid JSON files..."
-          FILES=$(find cypress/reports -type f -name '*.json' -size +0c)
-          for i in {1..10}; do
-            if [ -n "$FILES" ]; then
-              echo "JSON files ready."
-              break
-            else
-              echo "JSON files not ready yet, retry $i..."
-              sleep 3
-              FILES=$(find cypress/reports -type f -name '*.json' -size +0c)
-            fi
-          done
+          mkdir -p cypress/reports
+          npx cypress run --spec "cypress/e2e/component/Products.cy.js" \
+            --reporter mochawesome \
+            --reporter-options reportDir=cypress/reports,overwrite=false,html=false,json=true
 
-      # 7. Merge Mochawesome reports (only if non-empty)
-      - name: Merge Mochawesome reports
+      - name: Upload Products JSON
+        uses: actions/upload-artifact@v4
+        with:
+          name: products-json
+          path: cypress/reports/*.json
+
+  merge-reports:
+    runs-on: ubuntu-latest
+    needs: [login-tests, products-tests]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download JSON artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: login-json
+          path: cypress/reports
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: products-json
+          path: cypress/reports
+
+      - name: Merge Mochawesome JSON and generate HTML
         run: |
           JSON_FILES=$(find cypress/reports -type f -name '*.json' -size +0c)
           if [ -n "$JSON_FILES" ]; then
-            echo "Merging reports..."
-            npx mochawesome-merge $JSON_FILES > cypress/reports/mochawesome.json
-            npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
+              echo "Merging reports..."
+              npx mochawesome-merge $JSON_FILES > cypress/reports/mochawesome.json
+              npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
           else
-            echo "No valid JSON reports found, skipping merge."
+              echo "No valid JSON files to merge."
           fi
 
-      # 8. Upload artifacts
-      - name: Upload Cypress Artifacts
+      - name: Upload merged reports
         uses: actions/upload-artifact@v4
         with:
-          name: cypress-reports
-          path: |
-            cypress/reports
-            cypress/screenshots
-            cypress/videos
+          name: merged-reports
+          path: cypress/reports
