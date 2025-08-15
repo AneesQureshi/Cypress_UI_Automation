@@ -37,18 +37,25 @@ jobs:
       - name: Run Cypress tests
         id: cypress
         run: |
-          npx cypress run --spec "cypress/e2e/component/Alert.cy.js" || true
+          set +e
+          npx cypress run \
+            --spec "cypress/e2e/Alert.cy.js" \
+            --reporter mochawesome \
+            --reporter-options reportDir=cypress/reports,overwrite=false,html=false,json=true
           echo "test_status=$?" >> $GITHUB_ENV
+          set -e
 
-      # 5. Merge Mochawesome reports safely
+      # 5. Merge Mochawesome reports safely (with fallback file)
       - name: Merge Mochawesome reports
         run: |
+          mkdir -p cypress/reports
           if compgen -G "cypress/reports/*.json" > /dev/null; then
-            npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json 
-            npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
+            npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
           else
-            echo "No JSON reports to merge."
+            echo '{"stats":{},"results":[]}' > cypress/reports/mochawesome.json
+            echo "No JSON reports found. Created empty mochawesome.json."
           fi
+          npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
 
       # 6. Upload artifacts (reports, screenshots, videos)
       - name: Upload Cypress Artifacts
@@ -62,7 +69,7 @@ jobs:
 
       # 7. Send Email (always runs)
       - name: Send Cypress Report via Mailgun
-        if: always() # Runs even if previous steps fail
+        if: always()
         env:
           MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
           MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}

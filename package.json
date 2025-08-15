@@ -3,15 +3,13 @@
     "@4tw/cypress-drag-drop": "^2.3.0",
     "cypress": "^14.5.3",
     "cypress-file-upload": "^5.0.8",
-    "mochawesome": "^7.1.3",
-    "mochawesome-merge": "^5.0.0",
-    "mochawesome-report-generator": "^6.2.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "webpack": "^5.101.1"
   },
   "name": "cypress_ui_automation",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "dependencies": {
     "aggregate-error": "^3.1.0",
@@ -117,7 +115,6 @@
     "lodash.once": "^4.1.1",
     "log-symbols": "^4.1.0",
     "log-update": "^4.0.0",
-    "mailgun.js": "^12.0.3",
     "math-intrinsics": "^1.1.0",
     "merge-stream": "^2.0.0",
     "mime-db": "^1.52.0",
@@ -125,7 +122,6 @@
     "mimic-fn": "^2.1.0",
     "minimist": "^1.2.8",
     "ms": "^2.1.3",
-    "nodemailer": "^7.0.5",
     "npm-run-path": "^4.0.1",
     "object-inspect": "^1.13.4",
     "once": "^1.4.0",
@@ -183,7 +179,9 @@
     "yauzl": "^2.10.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cy:run": "cypress run"
+
   },
   "repository": {
     "type": "git",
