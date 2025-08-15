@@ -40,13 +40,13 @@ jobs:
 
       # 5. Merge Mochawesome reports
       - name: Merge Mochawesome reports
-        run: |
-      if compgen -G "cypress/reports/*.json" > /dev/null; then
+        run: if 
+          compgen -G "cypress/reports/*.json" > /dev/null; then
           npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json || true
           npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
-      else
-        echo "No JSON reports to merge."
-      fi
+            else
+            echo "No JSON reports to merge."
+            fi
 
       # 6. Upload artifacts (reports, screenshots, videos)
       - name: Upload Cypress Artifacts
