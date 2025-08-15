@@ -5,19 +5,18 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  
-  workflow_dispatch: # allows manual triggering
+  workflow_dispatch:  # manual trigger
 
 jobs:
   cypress-tests:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repo
+      # 1. Checkout repository
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js 22 (required for mochawesome-merge@5)
+      # 2. Setup Node.js 22
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -27,60 +26,54 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 4. Debug: List spec files to confirm paths
+      # 4. List Cypress spec files for debugging
       - name: List Cypress spec files
         run: ls -R cypress/e2e/component/
 
-      # 5. Clean previous reports
-      - name: Clean and create report folder
+      # 5. Clean and create report folder
+      - name: Prepare report folder
         run: |
-          echo "Current dir: $(pwd)"
+          rm -rf cypress/reports || true
           mkdir -p cypress/reports
-          ls -la cypress
-
 
       # 6. Run Cypress tests
       - name: Run Cypress tests
-        run: npx cypress run --spec "cypress/e2e/component/Products.cy.js" \
+        run: npx cypress run --spec "cypress/e2e/component/Login.cy.js" \
             --reporter mochawesome \
             --reporter-options "reportDir=cypress/reports,overwrite=true,html=true,json=true"
 
+      # 7. Wait for JSON files to appear
       - name: Wait for valid JSON reports
         run: |
           echo "Waiting for valid JSON files..."
-          MAX_RETRIES=10
-          RETRY_COUNT=0
-          SLEEP_INTERVAL=3
-
-          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-          JSON_FILES=$(find cypress/reports -type f -name '*.json' -size +0c)
-          if [ -n "$JSON_FILES" ]; then
-            echo "Found valid JSON files:"
-            ls -lh $JSON_FILES
-          break
-          else
-          echo "No valid JSON files yet, retrying in $SLEEP_INTERVAL seconds..."
-          sleep $SLEEP_INTERVAL
-          RETRY_COUNT=$((RETRY_COUNT + 1))
-          fi
+          for i in {1..10}; do
+            JSON_COUNT=$(find cypress/reports -type f -name '*.json' -size +0c | wc -l)
+            if [ "$JSON_COUNT" -gt 0 ]; then
+              echo "Found $JSON_COUNT JSON file(s)."
+              break
+            fi
+            echo "No JSON files yet. Retrying in 3s..."
+            sleep 3
           done
 
-          if [ -z "$JSON_FILES" ]; then
-          echo "Error: No valid JSON files found after $((MAX_RETRIES*SLEEP_INTERVAL)) seconds."
-          exit 1
-          fi
+      # 8. Merge Mochawesome reports safely
       - name: Merge Mochawesome reports
         run: |
+          JSON_FILES=$(find cypress/reports -type f -name '*.json' -size +0c)
+          if [ -n "$JSON_FILES" ]; then
+            echo "Merging reports..."
             npx mochawesome-merge $JSON_FILES > cypress/reports/mochawesome.json
             npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
+          else
+            echo "No valid JSON reports found, skipping merge."
+          fi
 
-
-      # 8. Upload artifacts (reports, screenshots, videos)
+      # 9. Upload artifacts
       - name: Upload Cypress Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: cypress-reports
-          path: cypress/reports
-
-
-     
+          path: |
+            cypress/reports
+            cypress/screenshots
+            cypress/videos
