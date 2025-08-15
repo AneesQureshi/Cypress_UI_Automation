@@ -5,9 +5,9 @@
     "passes": 2,
     "pending": 0,
     "failures": 0,
-    "start": "2025-08-15T21:08:40.780Z",
-    "end": "2025-08-15T21:08:54.937Z",
-    "duration": 14157,
+    "start": "2025-08-15T21:15:42.230Z",
+    "end": "2025-08-15T21:16:10.564Z",
+    "duration": 28334,
     "testsRegistered": 2,
     "passPercent": 100,
     "pendingPercent": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "07bc4b5a-11c9-4a6d-a451-f4ce943636d7",
+      "uuid": "c19f48fe-5058-4660-bc58-6e2d60ba6f96",
       "title": "",
       "fullFile": "cypress\\e2e\\component\\Alert.cy.js",
       "file": "cypress\\e2e\\component\\Alert.cy.js",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "a4704c05-bcb6-4994-ade1-b3ce3b251fcd",
+          "uuid": "2248c891-df66-48db-95af-95e1b16dcb3f",
           "title": "DemoQA Alerts handling",
           "fullFile": "",
           "file": "",
@@ -38,17 +38,17 @@
               "title": "waits for alert and asserts its text",
               "fullTitle": "DemoQA Alerts handling waits for alert and asserts its text",
               "timedOut": null,
-              "duration": 9877,
+              "duration": 24011,
               "state": "passed",
-              "speed": "medium",
+              "speed": "slow",
               "pass": true,
               "fail": false,
               "pending": false,
               "context": null,
               "code": "// Listen for window:alert\ncy.window().then(win => {\n  cy.stub(win, 'alert').as('alertStub');\n});\n// Click button to trigger alert after 5 seconds\ncy.get('#timerAlertButton').click();\n// Wait for 6 seconds to ensure alert is triggered\ncy.wait(6000);\n// Assert alert was called with expected text\ncy.get('@alertStub').should('have.been.calledOnceWith', 'This alert appeared after 5 seconds');",
               "err": {},
-              "uuid": "ed23178c-e30d-46cd-8f24-e5d4b1f98a53",
-              "parentUUID": "a4704c05-bcb6-4994-ade1-b3ce3b251fcd",
+              "uuid": "17717c91-857c-401e-98c1-f8fbe5aa0665",
+              "parentUUID": "2248c891-df66-48db-95af-95e1b16dcb3f",
               "isHook": false,
               "skipped": false
             },
@@ -56,7 +56,7 @@
               "title": "handles immediate alert",
               "fullTitle": "DemoQA Alerts handling handles immediate alert",
               "timedOut": null,
-              "duration": 1354,
+              "duration": 1374,
               "state": "passed",
               "speed": "fast",
               "pass": true,
@@ -65,21 +65,21 @@
               "context": null,
               "code": "cy.window().then(win => {\n  cy.stub(win, 'alert').as('alertStub');\n});\ncy.get('#alertButton').click();\ncy.get('@alertStub').should('have.been.calledOnceWith', 'You clicked a button');",
               "err": {},
-              "uuid": "b4d14493-9bb0-4f18-a98e-3aa420bd65b4",
-              "parentUUID": "a4704c05-bcb6-4994-ade1-b3ce3b251fcd",
+              "uuid": "ee9e0bec-cb0e-415a-9f93-560b38776138",
+              "parentUUID": "2248c891-df66-48db-95af-95e1b16dcb3f",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "ed23178c-e30d-46cd-8f24-e5d4b1f98a53",
-            "b4d14493-9bb0-4f18-a98e-3aa420bd65b4"
+            "17717c91-857c-401e-98c1-f8fbe5aa0665",
+            "ee9e0bec-cb0e-415a-9f93-560b38776138"
           ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 11231,
+          "duration": 25385,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000
@@ -113,7 +113,7 @@
     },
     "marge": {
       "options": {
-        "reportDir": "cypress/reports overwrite=true html=true json=true",
+        "reportDir": "cypress/reports",
         "overwrite": false,
         "html": true,
         "json": true,

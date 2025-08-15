@@ -39,7 +39,7 @@ jobs:
         run: |
           set +e
           npx cypress run \
-            --spec "cypress/e2e/Alert.cy.js" \
+            --spec "cypress/e2e/component/Alert.cy.js" \
             --reporter mochawesome \
             --reporter-options reportDir=cypress/reports,overwrite=false,html=false,json=true
           echo "test_status=$?" >> $GITHUB_ENV
