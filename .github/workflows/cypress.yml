@@ -50,7 +50,7 @@ jobs:
           if compgen -G "cypress/reports/*.json" > /dev/null; then
             echo "Checking JSON files before merge..."
             if find cypress/reports -name "*.json" -size +0c | grep .; then
-              npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
+              npx "merge":"mochawesome-merge cypress/reports/*.json > merged_report.json"
               npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
             else
               echo "All JSON files are empty. Skipping merge."
