@@ -1,7 +1,7 @@
-// cypress.config.js
-import { defineConfig } from "cypress";
+// cypress.config.cjs
+const { defineConfig } = require("cypress");
 
-export default defineConfig({
+module.exports = defineConfig({
   reporter: "mochawesome",
   reporterOptions: {
     reportDir: "cypress/reports",
