@@ -36,6 +36,5 @@ Thumbs.db
 # Optional: ignore test results
 test-results/
 
-# Ignore Mochawesome reports
-cypress/reports/
+
 
