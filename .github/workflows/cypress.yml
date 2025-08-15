@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: '*/30 * * * *'  # optional: run every 30 minutes
+    - cron: '*/30 * * * *'  # Optional: run every 30 minutes
 
 jobs:
   cypress-tests:
@@ -27,37 +27,36 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 3.1 Clean previous reports
+      # 4. Clean previous reports
       - name: Clean previous reports
         run: |
           rm -rf cypress/reports || true
           mkdir -p cypress/reports
 
-      # 4. Run Cypress tests (single spec file alerts)
-      - name: Run Cypress tests
-        id: cypress
+      # 5. Run only Alert.cy.js with mochawesome reporter
+      - name: Run Cypress tests (Alert only)
         run: |
-          set +e
           npx cypress run \
             --spec "cypress/e2e/component/Alert.cy.js" \
             --reporter mochawesome \
-            --reporter-options reportDir=cypress/reports,overwrite=false,html=false,json=true
-          echo "test_status=$?" >> $GITHUB_ENV
-          set -e
+            --reporter-options "reportDir=cypress/reports,overwrite=false,html=false,json=true" \
+          || true
 
-      # 5. Merge Mochawesome reports safely (with fallback file)
+      # 6. Merge Mochawesome reports safely
       - name: Merge Mochawesome reports
         run: |
-          mkdir -p cypress/reports
-          if compgen -G "cypress/reports/*.json" > /dev/null; then
-            npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
+          if ls cypress/reports/*.json 1> /dev/null 2>&1; then
+            if [ -s "$(ls cypress/reports/*.json | head -n 1)" ]; then
+              npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
+              npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
+            else
+              echo "Report JSON is empty. Skipping merge."
+            fi
           else
-            echo '{"stats":{},"results":[]}' > cypress/reports/mochawesome.json
-            echo "No JSON reports found. Created empty mochawesome.json."
+            echo "No JSON reports found. Skipping merge."
           fi
-          npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
 
-      # 6. Upload artifacts (reports, screenshots, videos)
+      # 7. Upload artifacts (reports, screenshots, videos)
       - name: Upload Cypress Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -67,10 +66,11 @@ jobs:
             cypress/screenshots
             cypress/videos
 
-      # 7. Send Email (always runs)
-      - name: Send Cypress Report via Mailgun
-        if: always()
+      # 8. Send Email if Tests Failed
+      - name: Send Email if Tests Failed
+        if: failure()
         env:
-          MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
-          MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
-        run: node send-email.js
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
+        run: node sendEmailReport.js
