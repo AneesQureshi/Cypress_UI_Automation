@@ -38,7 +38,7 @@ jobs:
 
       # 6. Run Cypress tests
       - name: Run Cypress tests
-        run: npx cypress run --spec "cypress/e2e/component/Login.cy.js" \
+        run: npx cypress run --spec "cypress/e2e/component/Products.cy.js" \
             --reporter mochawesome \
             --reporter-options "reportDir=cypress/reports,overwrite=true,html=true,json=true"
 
