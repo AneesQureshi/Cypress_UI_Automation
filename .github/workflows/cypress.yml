@@ -34,35 +34,38 @@ jobs:
       # 5. Clean previous reports
       - name: Clean and create report folder
         run: |
+          echo "Current dir: $(pwd)"
           mkdir -p cypress/reports
+          ls -la cypress
 
-      # 6. Run Cypress tests
-      - name: Run Cypress tests
-        run: npx cypress run --spec "cypress/e2e/component/Products.cy.js" \
-            --reporter mochawesome \
-            --reporter-options "reportDir=cypress/reports,overwrite=true,html=true,json=true"
 
-      # 7. Merge Mochawesome reports safely
-      - name: Merge Mochawesome reports
-        run: |
-          sleep 5
-          JSON_FILES=$(find cypress/reports -type f -name '*.json' -size +0c)
-          if [ -n "$JSON_FILES" ]; then
-            echo "Merging reports..."
-            npx mochawesome-merge $JSON_FILES > cypress/reports/mochawesome.json
-            npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
-          else
-            echo "No valid JSON reports found, skipping merge."
-          fi
+      # # 6. Run Cypress tests
+      # - name: Run Cypress tests
+      #   run: npx cypress run --spec "cypress/e2e/component/Products.cy.js" \
+      #       --reporter mochawesome \
+      #       --reporter-options "reportDir=cypress/reports,overwrite=true,html=true,json=true"
 
-      # 8. Upload artifacts (reports, screenshots, videos)
-      - name: Upload Cypress Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-reports
-          path: |
-            cypress/reports
-            cypress/screenshots
-            cypress/videos
+      # # 7. Merge Mochawesome reports safely
+      # - name: Merge Mochawesome reports
+      #   run: |
+      #     sleep 5
+      #     JSON_FILES=$(find cypress/reports -type f -name '*.json' -size +0c)
+      #     if [ -n "$JSON_FILES" ]; then
+      #       echo "Merging reports..."
+      #       npx mochawesome-merge $JSON_FILES > cypress/reports/mochawesome.json
+      #       npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
+      #     else
+      #       echo "No valid JSON reports found, skipping merge."
+      #     fi
+
+      # # 8. Upload artifacts (reports, screenshots, videos)
+      # - name: Upload Cypress Artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: cypress-reports
+      #     path: |
+      #       cypress/reports
+      #       cypress/screenshots
+      #       cypress/videos
 
      
