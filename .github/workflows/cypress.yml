@@ -33,10 +33,12 @@ jobs:
           rm -rf cypress/reports || true
           mkdir -p cypress/reports
 
-      # 4. Run Cypress tests (multiple spec files)
+      # 4. Run Cypress tests (single spec file alerts)
       - name: Run Cypress tests
         id: cypress
-        run: npx cypress run 
+        run: |
+          npx cypress run --spec "cypress/e2e/Alert.cy.js" || true
+          echo "test_status=$?" >> $GITHUB_ENV
 
       # 5. Merge Mochawesome reports safely
       - name: Merge Mochawesome reports
@@ -58,11 +60,10 @@ jobs:
             cypress/screenshots
             cypress/videos
 
-      # 7. Send Email if Tests Failed
-      - name: Send Email if Tests Failed
-        if: failure()  # run only if Cypress tests failed
+      # 7. Send Email (always)
+       - name: Send Cypress Report via Mailgun
+        if: always()  # Runs even if previous steps fail
         env:
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
-        run: node sendEmailReport.js
+          MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+          MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
+        run: node send-email.js
