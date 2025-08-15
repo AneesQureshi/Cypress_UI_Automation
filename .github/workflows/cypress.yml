@@ -27,14 +27,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 3.1 Clean the report folder before running tests
-      - name: Clean previous reports
-        run: rm -rf cypress/reports/*.json cypress/reports/*.html 
+      # - name: Clean previous reports
+  run: |
+    rm -rf cypress/reports || true
+    mkdir -p cypress/reports
 
       # 4. Run Cypress tests (multiple spec files)
       - name: Run Cypress tests
         id: cypress
-        run: npx cypress run --spec "cypress/e2e/Alert.cy.js,cypress/e2e/browser.cy.js,cypress/e2e/individual.cy.js" || true
+        run: npx cypress run --spec "cypress/e2e/{Alert,browser,individual}.cy.js" || true
+
 
       # 5. Merge Mochawesome reports safely
       - name: Merge Mochawesome reports
