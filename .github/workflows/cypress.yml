@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: '*/30 * * * *' # optional: run every 30 minutes
+    - cron: '*/30 * * * *'  # optional: run every 30 minutes
 
 jobs:
   cypress-tests:
@@ -32,8 +32,9 @@ jobs:
         run: |
           rm -rf cypress/reports || true
           mkdir -p cypress/reports
+          touch cypress/reports/.gitkeep  # keep folder if empty
 
-      # 5. Run Cypress tests (single spec) with Mochawesome output
+      # 5. Run Cypress tests (single spec: Alert)
       - name: Run Cypress tests
         id: cypress
         run: |
@@ -46,7 +47,7 @@ jobs:
       - name: Merge Mochawesome reports
         run: |
           if compgen -G "cypress/reports/*.json" > /dev/null; then
-            npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
+            npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json 
             npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
           else
             echo "No JSON reports to merge."
@@ -61,10 +62,11 @@ jobs:
             cypress/reports
             cypress/screenshots
             cypress/videos
+          if-no-files-found: ignore # keeps step from failing if empty
 
       # 8. Send Email if Tests Failed
       - name: Send Email if Tests Failed
-        if: failure() # run only if Cypress tests failed
+        if: failure()
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
