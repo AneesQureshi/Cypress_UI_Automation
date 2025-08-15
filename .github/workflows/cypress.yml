@@ -29,7 +29,7 @@ jobs:
 
       # 3.1 Clean the report folder before running tests
       - name: Clean previous reports
-        run: rm -rf cypress/reports/*.json cypress/reports/*.html || true
+        run: rm -rf cypress/reports/*.json cypress/reports/*.html 
 
       # 4. Run Cypress tests (multiple spec files)
       - name: Run Cypress tests
@@ -40,7 +40,7 @@ jobs:
       - name: Merge Mochawesome reports
         run: |
           if compgen -G "cypress/reports/*.json" > /dev/null; then
-            npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json || true
+            npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json 
             npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
           else
             echo "No JSON reports to merge."
