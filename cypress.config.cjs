@@ -22,7 +22,7 @@ module.exports = defineConfig({
       };
 
       config.baseUrl = envUrls[envName];
-      console.log(`Running tests on: ${config.baseUrl}`);
+      console.log(`Running tests on(for force networkerror.cy.js): ${config.baseUrl}`);
 
       return config;
     },
