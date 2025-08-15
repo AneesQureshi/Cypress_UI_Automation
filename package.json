@@ -6,6 +6,7 @@
     "marge": "^1.0.1",
     "mochawesome": "^7.1.3",
     "mochawesome-merge": "^5.0.0",
+    "mochawesome-report-generator": "^6.2.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "webpack": "^5.101.1"

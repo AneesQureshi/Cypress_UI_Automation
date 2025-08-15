@@ -2,13 +2,12 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
-  reporter: "mochawesome",
+   reporter: "mochawesome",
   reporterOptions: {
     reportDir: "cypress/reports",
-    overwrite: false,
+    overwrite: true,
     html: true,
-    json: true,
-    embeddedScreenshots: true,
+    json: true
   },
   e2e: {
     screenshotOnRunFailure: true,
