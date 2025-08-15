@@ -36,7 +36,7 @@ jobs:
       # 4. Run Cypress tests (multiple spec files)
       - name: Run Cypress tests
         id: cypress
-        run: npx cypress run --spec "cypress/e2e/{Alert,browser,individual}.cy.js" || true
+        run: npx cypress run 
 
       # 5. Merge Mochawesome reports safely
       - name: Merge Mochawesome reports
