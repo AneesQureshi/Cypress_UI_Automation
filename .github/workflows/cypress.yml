@@ -5,7 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:  # manual trigger
+  workflow_dispatch: # manual trigger
 
 jobs:
   cypress-tests:
@@ -26,37 +26,34 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 4. List Cypress spec files for debugging
-      - name: List Cypress spec files
-        run: ls -R cypress/e2e/component/
-
-      # 5. Clean and create report folder
+      # 4. Clean and create report folder
       - name: Prepare report folder
         run: |
           rm -rf cypress/reports || true
           mkdir -p cypress/reports
 
-      # 6. Run Cypress tests
+      # 5. Run Cypress tests
       - name: Run Cypress tests
         run: npx cypress run --spec "cypress/e2e/component/Login.cy.js" \
             --reporter mochawesome \
             --reporter-options "reportDir=cypress/reports,overwrite=true,html=true,json=true"
 
-      # 7. Wait for JSON files to appear
-      - name: Wait for valid JSON reports
+      # 6. Wait for valid JSON report
+      - name: Wait for valid JSON file
         run: |
-          echo "Waiting for valid JSON files..."
+          FILE="cypress/reports/mochawesome.json"
+          echo "Waiting for valid JSON file..."
           for i in {1..10}; do
-            JSON_COUNT=$(find cypress/reports -type f -name '*.json' -size +0c | wc -l)
-            if [ "$JSON_COUNT" -gt 0 ]; then
-              echo "Found $JSON_COUNT JSON file(s)."
+            if [ -s "$FILE" ]; then
+              echo "JSON file ready."
               break
+            else
+              echo "JSON file not ready yet, retry $i..."
+              sleep 3
             fi
-            echo "No JSON files yet. Retrying in 3s..."
-            sleep 3
           done
 
-      # 8. Merge Mochawesome reports safely
+      # 7. Merge Mochawesome reports (only if non-empty)
       - name: Merge Mochawesome reports
         run: |
           JSON_FILES=$(find cypress/reports -type f -name '*.json' -size +0c)
@@ -68,7 +65,7 @@ jobs:
             echo "No valid JSON reports found, skipping merge."
           fi
 
-      # 9. Upload artifacts
+      # 8. Upload artifacts
       - name: Upload Cypress Artifacts
         uses: actions/upload-artifact@v4
         with:
