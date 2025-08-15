@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: '*/30 * * * *'  # optional: run every 30 minutes
+    - cron: '*/30 * * * *' # run every 30 minutes
 
 jobs:
   cypress-tests:
@@ -27,33 +27,39 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 4. Clean and prepare report folder
-      - name: Clean previous reports
+      # 4. Prepare report folder
+      - name: Prepare report folder
         run: |
           rm -rf cypress/reports || true
           mkdir -p cypress/reports
-          touch cypress/reports/.gitkeep  # keep folder if empty
+          touch cypress/reports/.gitkeep
 
-      # 5. Run Cypress tests (single spec: Alert)
+      # 5. Run Cypress tests with Mochawesome reporter
       - name: Run Cypress tests
         id: cypress
         run: |
           npx cypress run \
             --spec "cypress/e2e/component/Alert.cy.js" \
             --reporter mochawesome \
-            --reporter-options "reportDir=cypress/reports,overwrite=true,html=true,json=true" || true
+            --reporter-options "reportDir=cypress/reports,overwrite=true,html=true,json=true" \
+          || true
 
       # 6. Merge Mochawesome reports safely
       - name: Merge Mochawesome reports
         run: |
           if compgen -G "cypress/reports/*.json" > /dev/null; then
-            npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json 
-            npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
+            echo "Checking JSON files before merge..."
+            if find cypress/reports -name "*.json" -size +0c | grep .; then
+              npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
+              npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
+            else
+              echo "All JSON files are empty. Skipping merge."
+            fi
           else
             echo "No JSON reports to merge."
           fi
 
-      # 7. Upload artifacts (reports, screenshots, videos)
+      # 7. Upload artifacts (always run, even if folder is empty)
       - name: Upload Cypress Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -62,7 +68,7 @@ jobs:
             cypress/reports
             cypress/screenshots
             cypress/videos
-          if-no-files-found: ignore # keeps step from failing if empty
+          if-no-files-found: ignore
 
       # 8. Send Email if Tests Failed
       - name: Send Email if Tests Failed
