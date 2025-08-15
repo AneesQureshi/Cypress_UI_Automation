@@ -1,7 +1,15 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
+  reporter: "mochawesome",
+  reporterOptions: {
+    reportDir: "cypress/reports",
+    overwrite: false,
+    html: true,
+    json: true,
+    embeddedScreenshots: true,
   e2e: {
+    screenshotOnRunFailure: true, // take screenshots on failure
     setupNodeEvents(on, config) {
       // Get environment from CLI or default to 'dev'
       const envName = config.env.environment || "dev";

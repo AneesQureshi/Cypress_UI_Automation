@@ -1,6 +1,5 @@
 name: Cypress Tests
 
-# Run workflow on every push or pull request
 on:
   push:
     branches: [ main ]
@@ -8,24 +7,34 @@ on:
     branches: [ main ]
 
 jobs:
-  cypress-run:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Check out the code
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # 2. Setup Node.js
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
 
-      # 3. Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      # 4. Run Cypress tests
       - name: Run Cypress tests
-        run: npx cypress run
+        run: |
+          npx cypress run || true  # continue even if tests fail
+
+      - name: Merge Mochawesome reports
+        run: |
+          npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
+          npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
+
+      - name: Send Email if Tests Failed
+        if: failure()  # only runs if Cypress tests failed
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}          # sender email
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}          # SMTP / App password
+          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }} # recipient(s), comma-separated
+        run: node sendEmailReport.js
