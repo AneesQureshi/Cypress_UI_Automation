@@ -32,24 +32,29 @@ jobs:
           rm -rf cypress/reports || true
           mkdir -p cypress/reports
 
-      # 5. Run Cypress tests
+      # 5. Run Cypress tests for Login and Products specs
       - name: Run Cypress tests
-        run: npx cypress run --spec "cypress/e2e/component/Login.cy.js" \
-            --reporter mochawesome \
-            --reporter-options "reportDir=cypress/reports,overwrite=true,html=true,json=true"
-
-      # 6. Wait for valid JSON report
-      - name: Wait for valid JSON file
         run: |
-          FILE="cypress/reports/mochawesome.json"
-          echo "Waiting for valid JSON file..."
+          npx cypress run --spec "cypress/e2e/component/Login.cy.js" \
+              --reporter mochawesome \
+              --reporter-options "reportDir=cypress/reports,overwrite=false,html=true,json=true"
+          npx cypress run --spec "cypress/e2e/component/Products.cy.js" \
+              --reporter mochawesome \
+              --reporter-options "reportDir=cypress/reports,overwrite=false,html=true,json=true"
+
+      # 6. Wait for valid JSON files
+      - name: Wait for valid JSON files
+        run: |
+          echo "Waiting for valid JSON files..."
+          FILES=$(find cypress/reports -type f -name '*.json' -size +0c)
           for i in {1..10}; do
-            if [ -s "$FILE" ]; then
-              echo "JSON file ready."
+            if [ -n "$FILES" ]; then
+              echo "JSON files ready."
               break
             else
-              echo "JSON file not ready yet, retry $i..."
+              echo "JSON files not ready yet, retry $i..."
               sleep 3
+              FILES=$(find cypress/reports -type f -name '*.json' -size +0c)
             fi
           done
 
