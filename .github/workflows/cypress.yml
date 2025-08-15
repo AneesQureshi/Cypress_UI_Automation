@@ -60,9 +60,9 @@ jobs:
             cypress/screenshots
             cypress/videos
 
-      # 7. Send Email (always)
-       - name: Send Cypress Report via Mailgun
-        if: always()  # Runs even if previous steps fail
+      # 7. Send Email (always runs)
+      - name: Send Cypress Report via Mailgun
+        if: always() # Runs even if previous steps fail
         env:
           MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
           MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
