@@ -45,18 +45,35 @@ jobs:
             --reporter mochawesome \
             --reporter-options "reportDir=cypress/reports,overwrite=true,html=true,json=true"
 
-      # 7. Merge Mochawesome reports safely
-      - name: Merge Mochawesome reports
+      - name: Wait for valid JSON reports
         run: |
-          sleep 5
+          echo "Waiting for valid JSON files..."
+          MAX_RETRIES=10
+          RETRY_COUNT=0
+          SLEEP_INTERVAL=3
+
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
           JSON_FILES=$(find cypress/reports -type f -name '*.json' -size +0c)
           if [ -n "$JSON_FILES" ]; then
-            echo "Merging reports..."
+            echo "Found valid JSON files:"
+            ls -lh $JSON_FILES
+          break
+          else
+          echo "No valid JSON files yet, retrying in $SLEEP_INTERVAL seconds..."
+          sleep $SLEEP_INTERVAL
+          RETRY_COUNT=$((RETRY_COUNT + 1))
+          fi
+          done
+
+          if [ -z "$JSON_FILES" ]; then
+          echo "Error: No valid JSON files found after $((MAX_RETRIES*SLEEP_INTERVAL)) seconds."
+          exit 1
+          fi
+      - name: Merge Mochawesome reports
+        run: |
             npx mochawesome-merge $JSON_FILES > cypress/reports/mochawesome.json
             npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
-          else
-            echo "No valid JSON reports found, skipping merge."
-          fi
+
 
       # 8. Upload artifacts (reports, screenshots, videos)
       - name: Upload Cypress Artifacts
