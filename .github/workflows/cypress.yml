@@ -45,6 +45,7 @@ jobs:
       # 7. Merge Mochawesome reports safely
       - name: Merge Mochawesome reports
         run: |
+          sleep 5
           JSON_FILES=$(find cypress/reports -type f -name '*.json' -size +0c)
           if [ -n "$JSON_FILES" ]; then
             echo "Merging reports..."
