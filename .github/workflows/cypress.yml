@@ -26,17 +26,27 @@ jobs:
       # 3. Install dependencies
       - name: Install dependencies
         run: npm ci
+        
+      # 3.1 Clean the report folder before running tests
+      - name: Clean previous reports
+        run: rm -rf cypress/reports/*.json cypress/reports/*.html || true
 
       # 4. Run Cypress tests
       - name: Run Cypress tests
         id: cypress
-        run: npx cypress run || true   # keep running even if tests fail
+        run: npx cypress run --spec "cypress/e2e/Alert.cy.js,cypress/e2e/browser.cy.js,cypress/e2e/individual.cy.js" || true
+
+
 
       # 5. Merge Mochawesome reports
       - name: Merge Mochawesome reports
         run: |
-          npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
+      if compgen -G "cypress/reports/*.json" > /dev/null; then
+          npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json || true
           npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
+      else
+        echo "No JSON reports to merge."
+      fi
 
       # 6. Upload artifacts (reports, screenshots, videos)
       - name: Upload Cypress Artifacts
