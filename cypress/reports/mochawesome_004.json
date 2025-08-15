@@ -1,0 +1,263 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 9,
+    "passes": 8,
+    "pending": 0,
+    "failures": 1,
+    "start": "2025-08-15T10:41:56.518Z",
+    "end": "2025-08-15T10:42:50.492Z",
+    "duration": 53974,
+    "testsRegistered": 9,
+    "passPercent": 88.88888888888889,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "dd6273c7-ea66-4b93-998f-9936e196e2c0",
+      "title": "",
+      "fullFile": "cypress\\e2e\\component\\Individual.cy.js",
+      "file": "cypress\\e2e\\component\\Individual.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "ef4ddccf-28d6-4bff-b84f-abce311ec5be",
+          "title": "Download invoice",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Download invoice",
+              "fullTitle": "Download invoice Download invoice",
+              "timedOut": null,
+              "duration": 2681,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('https://automationexercise.com/payment_done/6200');\ncy.intercept('GET', '/download_invoice/6200').as('downloadInvoice');\ncy.get('a[href=\"/download_invoice/6200\"]').click();\ncy.wait('@downloadInvoice').its('response.statusCode').should('eq', 200);",
+              "err": {},
+              "uuid": "d848e4bc-e077-4c76-aab9-3266b1a605fb",
+              "parentUUID": "ef4ddccf-28d6-4bff-b84f-abce311ec5be",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Accordion expand/collapse test",
+              "fullTitle": "Download invoice Accordion expand/collapse test",
+              "timedOut": null,
+              "duration": 8125,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('https://demoqa.com/accordian');\ncy.get('#section1Content').should('be.visible');\ncy.get('#section1Heading').click();\ncy.get('#section1Content').should('not.be.visible');\ncy.get('#section1Heading').click();\ncy.get('#section1Content').should('be.visible');\ncy.get('#section2Content').should('not.be.visible');\ncy.get('#section2Heading').click();\ncy.get('#section2Content').should('be.visible');\ncy.get('#section2Heading').click();\ncy.get('#section2Content').should('not.be.visible');\ncy.get('#section3Content').should('not.be.visible');\ncy.get('#section3Heading').click();\ncy.get('#section3Content').should('be.visible');",
+              "err": {},
+              "uuid": "28f33509-6c26-45c8-a04b-01a2cb0752dc",
+              "parentUUID": "ef4ddccf-28d6-4bff-b84f-abce311ec5be",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Autocomplete-Multiple",
+              "fullTitle": "Download invoice Autocomplete-Multiple",
+              "timedOut": null,
+              "duration": 6026,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('https://demoqa.com/auto-complete');\nconst colors = ['Red', 'Blue', 'Green'];\ncolors.forEach(color => {\n  cy.get('.css-2b097c-container').eq(0).type(color.substring(0, 2));\n  cy.get('.auto-complete__menu-list').contains(color).click();\n  cy.get('#autoCompleteMultipleInput').should('have.value', '');\n});\ncolors.forEach(color => {\n  cy.get('.auto-complete__multi-value__label').contains(color).should('be.visible');\n});",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Blue' within the element: <div.css-12jo7m5.auto-complete__multi-value__label> but never did.",
+                "estack": "AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Blue' within the element: <div.css-12jo7m5.auto-complete__multi-value__label> but never did.\n    at eval (webpack://cypress_ui_automation/./cypress/e2e/component/Individual.cy.js:68:9)\nat Array.forEach (<anonymous>)\n    at Context.eval (webpack://cypress_ui_automation/./cypress/e2e/component/Individual.cy.js:65:11)",
+                "diff": null
+              },
+              "uuid": "d608e2a1-d830-4f79-9dc5-9f228e02e978",
+              "parentUUID": "ef4ddccf-28d6-4bff-b84f-abce311ec5be",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Autocomplete-single",
+              "fullTitle": "Download invoice Autocomplete-single",
+              "timedOut": null,
+              "duration": 1591,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('https://demoqa.com/auto-complete');\nconst color = 'Red';\ncy.get('.auto-complete__value-container').eq(1).type(color.substring(0, 1));\ncy.get('.auto-complete__menu-list').contains(color).click();\ncy.get('.auto-complete__value-container').should('have.value', '');\ncy.get('.auto-complete__value-container').contains(color).should('be.visible');\ncy.get('.auto-complete__single-value').should('exist').and('be.visible').and('contain.text', color).and('have.text', color);",
+              "err": {},
+              "uuid": "766464b8-1954-40ea-b192-e49afce2ea88",
+              "parentUUID": "ef4ddccf-28d6-4bff-b84f-abce311ec5be",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "DatePickerDropdown",
+              "fullTitle": "Download invoice DatePickerDropdown",
+              "timedOut": null,
+              "duration": 1450,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('https://demoqa.com/date-picker');\ncy.get('#datePickerMonthYearInput').click();\ncy.get('.react-datepicker__year-select').select('1987');\ncy.get('.react-datepicker__month-select').select('December');\ncy.get('.react-datepicker__day').contains(/^13$/) // exact match to avoid matching e.g. 130 or 213\n.click();\ncy.get('#datePickerMonthYearInput').should('have.value', '12/13/1987');",
+              "err": {},
+              "uuid": "54207023-9ff5-449b-927c-3c743814d3e9",
+              "parentUUID": "ef4ddccf-28d6-4bff-b84f-abce311ec5be",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Selects date and time from the second date picker",
+              "fullTitle": "Download invoice Selects date and time from the second date picker",
+              "timedOut": null,
+              "duration": 5419,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const targetYear = '1987';\nconst targetMonth = 'December';\nconst targetDay = '13';\nconst targetTime = '10:30';\ncy.visit('https://demoqa.com/date-picker');\ncy.get('#dateAndTimePickerInput').click();\ncy.get('.react-datepicker__year-read-view--down-arrow').click();\n//  cy.get('.react-datepicker__year-option').each(($el, index, $list) => {\n//   if ($el.text().trim() === targetYear) {\n//     cy.wrap($el).click();\n//   } else {\n//     cy.get('.react-datepicker__navigation.react-datepicker__navigation--years.react-datepicker__navigation--years-previous').click();\n//   }\n// });\n//using recursion\nfunction selectYear(targetYear) {\n  cy.get('.react-datepicker__year-read-view--down-arrow').click({\n    force: true\n  });\n  function checkYear() {\n    cy.get('.react-datepicker__year-option').then($els => {\n      // Find the element whose text equals targetYear\n      const yearEl = [...$els].find(el => el.innerText.trim() === targetYear);\n      if (yearEl) {\n        // Found the exact year, click it\n        cy.wrap(yearEl).click();\n      } else {\n        // Find min and max years visible to decide which arrow to click\n        const years = [...$els].map(el => parseInt(el.innerText.trim())).filter(n => !isNaN(n));\n        const minYear = Math.min(...years);\n        const maxYear = Math.max(...years);\n        const targetYearNum = parseInt(targetYear);\n        if (targetYearNum < minYear) {\n          // targetYear is before visible years, click previous to scroll down years\n          cy.get('.react-datepicker__navigation--years-previous').click();\n          // cy.wait(200);\n          checkYear();\n        } else if (targetYearNum > maxYear) {\n          // targetYear is after visible years, click upcoming to scroll up years\n          cy.get('.react-datepicker__navigation--years-upcoming').click();\n          //cy.wait(200);\n          checkYear();\n        } else {\n          // The targetYear is not found but lies within visible range (rare)\n          // Just click the closest year or handle as fallback\n          cy.wrap($els[0]).click();\n        }\n      }\n    });\n  }\n  checkYear();\n}\nselectYear(targetYear);\ncy.get('.react-datepicker__month-read-view--down-arrow').click();\ncy.get('.react-datepicker__month-option').contains(targetMonth).click();\ncy.contains('.react-datepicker__day', new RegExp(`^${targetDay}$`)).click();\ncy.get('.react-datepicker__time-list').contains(targetTime).click();\ncy.get('#dateAndTimePickerInput').should('contain.value', `${targetMonth} ${targetDay}, ${targetYear}`);",
+              "err": {},
+              "uuid": "d702c372-68b3-4e42-9bd8-992a1436af07",
+              "parentUUID": "ef4ddccf-28d6-4bff-b84f-abce311ec5be",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Tabs",
+              "fullTitle": "Download invoice Tabs",
+              "timedOut": null,
+              "duration": 6481,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('https://demoqa.com/tabs');\n// Verify default selected tab (What)\ncy.get('#demo-tab-what').should('have.class', 'active');\ncy.get('#demo-tabpane-what').should('be.visible').and('contain.text', 'Lorem Ipsum is simply dummy text of the printing');\n// Click \"Origin\" tab and verify content\ncy.get('#demo-tab-origin').click();\ncy.get('#demo-tab-origin').should('have.class', 'active');\ncy.get('#demo-tabpane-origin').should('be.visible').and('contain.text', 'Contrary to popular belief,');\n// Click \"Use\" tab and verify content\ncy.get('#demo-tab-use').click();\ncy.get('#demo-tab-use').should('have.class', 'active');\ncy.get('#demo-tabpane-use').should('be.visible').and('contain.text', 'Various versions have evolved over the years');",
+              "err": {},
+              "uuid": "d8539453-e625-42a1-aa24-9ac21fd3c439",
+              "parentUUID": "ef4ddccf-28d6-4bff-b84f-abce311ec5be",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Tooltips",
+              "fullTitle": "Download invoice Tooltips",
+              "timedOut": null,
+              "duration": 711,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('https://demoqa.com/tool-tips');\nconst tooltipScenarios = [{\n  selector: '#toolTipButton',\n  expected: 'You hovered over the Button'\n}, {\n  selector: '#toolTipTextField',\n  expected: 'You hovered over the text field'\n}, {\n  selector: '[data-toggle=\"tooltipString\"]',\n  expected: 'You hovered over the Contrary'\n} // Example selector—inspect actual for accuracy\n];\ntooltipScenarios.forEach(({\n  selector,\n  expected\n}) => {\n  it(`should display correct tooltip for ${selector}`, () => {\n    cy.get(selector).trigger('mouseover');\n    cy.get('.tooltip-inner') // or other appropriate tooltip container\n    .should('be.visible').and('contain.text', expected);\n  });\n});",
+              "err": {},
+              "uuid": "c6c95c0c-4018-4efe-9369-940517941a69",
+              "parentUUID": "ef4ddccf-28d6-4bff-b84f-abce311ec5be",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Progress Bar",
+              "fullTitle": "Download invoice Progress Bar",
+              "timedOut": null,
+              "duration": 15044,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('https://demoqa.com/progress-bar');\ncy.get('#startStopButton').click();\n//  cy.wait(10000)\n// Stop when the progress reaches around 75% to avoid race conditions\ncy.get('.progress-bar', {\n  timeout: 15000\n}) // 15s timeout for slow runs\n.should($bar => {\n  const value = parseInt($bar.attr('aria-valuenow'), 10);\n  if (value < 70) {\n    throw new Error(`Progress at ${value}%, waiting for 70%...`);\n  }\n});\n// Click stop once it reaches 70% or more\ncy.get('#startStopButton').click();\n// Verify it's stopped\ncy.get('.progress-bar').invoke('attr', 'aria-valuenow').then(val => {\n  const stoppedValue = parseInt(val, 10);\n  expect(stoppedValue).to.be.at.least(70);\n  cy.log(`Stopped at ${stoppedValue}%`);\n});\n// Verify that progress is paused/stopped\ncy.get('.progress-bar').invoke('attr', 'aria-valuenow').then(val => {\n  const paused = parseInt(val);\n  expect(paused).to.be.within(70, 80);\n});\ncy.get('#startStopButton').click();\n// Wait for full completion\ncy.get('.progress-bar', {\n  timeout: 3000\n}).should('have.attr', 'aria-valuenow', '100').then(() => {\n  //cy.get('#startStopButton').click(); // stop at 100 before auto-restart\n  cy.get('#resetButton').click();\n});\n// Click reset\n// Verify reset to 0%\ncy.get('.progress-bar').should('have.attr', 'aria-valuenow', '41');",
+              "err": {},
+              "uuid": "567313fc-a8aa-46b5-97b6-64e920b73f38",
+              "parentUUID": "ef4ddccf-28d6-4bff-b84f-abce311ec5be",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "d848e4bc-e077-4c76-aab9-3266b1a605fb",
+            "28f33509-6c26-45c8-a04b-01a2cb0752dc",
+            "766464b8-1954-40ea-b192-e49afce2ea88",
+            "54207023-9ff5-449b-927c-3c743814d3e9",
+            "d702c372-68b3-4e42-9bd8-992a1436af07",
+            "d8539453-e625-42a1-aa24-9ac21fd3c439",
+            "c6c95c0c-4018-4efe-9369-940517941a69",
+            "567313fc-a8aa-46b5-97b6-64e920b73f38"
+          ],
+          "failures": [
+            "d608e2a1-d830-4f79-9dc5-9f228e02e978"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 47528,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": true,
+        "json": true,
+        "embeddedScreenshots": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}

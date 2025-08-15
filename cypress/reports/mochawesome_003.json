@@ -1,0 +1,106 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-08-15T10:41:37.026Z",
+    "end": "2025-08-15T10:41:53.401Z",
+    "duration": 16375,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "5cccf729-6856-4e6f-9da2-935a333f8f55",
+      "title": "",
+      "fullFile": "cypress\\e2e\\component\\ContactUs.cy.js",
+      "file": "cypress\\e2e\\component\\ContactUs.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "fc6084c6-0bc4-40d9-bcbd-cb38285e5eb4",
+          "title": "Form file upload",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Verify all products have all details and product detail page",
+              "fullTitle": "Form file upload Verify all products have all details and product detail page",
+              "timedOut": null,
+              "duration": 12295,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.LoginFunc();\ncy.get(\"a[href='/products']\").click();\nvar CountProduct = 0;\ncy.get('.col-sm-4').its('length').should('be.gt', 0).then(count => {\n  cy.log(`Total number of products :${count - 1}`);\n});\ncy.get('.col-sm-4').each(($el, index) => {\n  CountProduct = CountProduct + 1;\n  // Get price\n  const price = $el.find('h2').text().trim();\n  //cy.log(price);\n  // Get title\n  const title = $el.find('p').first().text().trim();\n  //cy.log(title);\n  // Get Add to Cart button text\n  const addToCartText = $el.find('a.add-to-cart').text().trim();\n  //cy.log(addToCartText);\n  // Get View Product link text and URL\n  const viewProductText = $el.find('a[href*=\"product_details\"]').text().trim();\n  const viewProductUrl = $el.find('a[href*=\"product_details\"]').attr('href');\n  //   cy.log(`Product ${index + 1}: ${title} - ${price}`);\n  //   cy.log(`Add to Cart: ${addToCartText}`);\n  //   cy.log(`View Product: ${viewProductText} (${viewProductUrl})`);\n  // Assertions (optional)\n  if (index > 0) {\n    expect(price).to.not.be.empty;\n    expect(title).to.not.be.empty;\n    expect(viewProductText.trim()).to.equal(\"View Product\");\n    expect(viewProductUrl).to.include('/product_details/');\n  }\n}).then(() => {\n  cy.log(`Total number of products  :${CountProduct - 1}`);\n});",
+              "err": {},
+              "uuid": "cf220547-ddf7-4ab2-afc8-3226a0f8c7c4",
+              "parentUUID": "fc6084c6-0bc4-40d9-bcbd-cb38285e5eb4",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "cf220547-ddf7-4ab2-afc8-3226a0f8c7c4"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 12295,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": true,
+        "json": true,
+        "embeddedScreenshots": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}

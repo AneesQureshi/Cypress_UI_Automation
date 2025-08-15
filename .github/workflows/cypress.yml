@@ -1,40 +1,58 @@
-name: Cypress Tests
+name: Cypress Tests with Reports and Email
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron: '*/30 * * * *'  # optional: run every 30 minutes
 
 jobs:
-  test:
+  cypress-tests:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout repository
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      # 2. Setup Node.js
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      # 3. Install dependencies
       - name: Install dependencies
         run: npm ci
 
+      # 4. Run Cypress tests
       - name: Run Cypress tests
-        run: |
-          npx cypress run || true  # continue even if tests fail
+        id: cypress
+        run: npx cypress run || true   # keep running even if tests fail
 
+      # 5. Merge Mochawesome reports
       - name: Merge Mochawesome reports
         run: |
           npx mochawesome-merge cypress/reports/*.json > cypress/reports/mochawesome.json
           npx marge cypress/reports/mochawesome.json -f mochawesome -o cypress/reports
 
+      # 6. Upload artifacts (reports, screenshots, videos)
+      - name: Upload Cypress Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-reports
+          path: |
+            cypress/reports
+            cypress/screenshots
+            cypress/videos
+
+      # 7. Send Email if Tests Failed
       - name: Send Email if Tests Failed
-        if: failure()  # only runs if Cypress tests failed
+        if: ${{ always() }}   # always run this step
         env:
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}          # sender email
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}          # SMTP / App password
-          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }} # recipient(s), comma-separated
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
         run: node sendEmailReport.js
