@@ -37,7 +37,7 @@ jobs:
       - name: Run Cypress tests
         id: cypress
         run: |
-          npx cypress run --spec "cypress/e2e/Alert.cy.js" || true
+          npx cypress run --spec "cypress/e2e/component/Alert.cy.js" || true
           echo "test_status=$?" >> $GITHUB_ENV
 
       # 5. Merge Mochawesome reports safely

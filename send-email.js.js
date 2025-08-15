@@ -15,7 +15,7 @@ const reportHtml = fs.readFileSync(reportPath, 'utf-8');
 
 mg.messages.create(process.env.MAILGUN_DOMAIN, {
   from: 'Cypress Reports <mailgun@' + process.env.MAILGUN_DOMAIN + '>',
-  to: ['receiver@example.com'], // Change to your recipient email
+  to: ['muhammadanish2011@gmail.com'], // Change to your recipient email
   subject: 'Cypress Test Report',
   html: reportHtml
 })
