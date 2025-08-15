@@ -1,0 +1,50 @@
+name: Merge Cypress Reports Only
+
+on:
+  workflow_dispatch: # allows manual triggering
+
+jobs:
+  merge-reports:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 3. Install required packages
+      - name: Install mochawesome tools
+        run: npm install --save-dev mochawesome-merge mochawesome-report-generator
+
+      # 4. Merge JSON reports
+      - name: Merge Mochawesome JSON reports
+        run: |
+          if compgen -G "cypress/reports/*.json" > /dev/null; then
+            echo "Merging JSON reports..."
+            npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged.json
+          else
+            echo "No JSON reports found to merge."
+          fi
+
+      # 5. Generate HTML report
+      - name: Generate HTML report from merged JSON
+        run: |
+          if [ -f cypress/reports/merged.json ]; then
+            npx marge cypress/reports/merged.json -f mochawesome -o cypress/reports
+          else
+            echo "Merged JSON report not found. Skipping HTML generation."
+          fi
+
+      # 6. Upload artifacts
+      - name: Upload Cypress Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-reports
+          path: |
+            cypress/reports

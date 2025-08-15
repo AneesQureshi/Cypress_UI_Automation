@@ -65,11 +65,4 @@ jobs:
             cypress/screenshots
             cypress/videos
 
-      # 9. Send Email if Tests Failed
-      - name: Send Email if Tests Failed
-        if: failure()
-        env:
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
-        run: node send-email.js
+     
