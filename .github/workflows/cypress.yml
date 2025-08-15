@@ -27,16 +27,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # - name: Clean previous reports
-  run: |
-    rm -rf cypress/reports || true
-    mkdir -p cypress/reports
+      # 3.1 Clean previous reports
+      - name: Clean previous reports
+        run: |
+          rm -rf cypress/reports || true
+          mkdir -p cypress/reports
 
       # 4. Run Cypress tests (multiple spec files)
       - name: Run Cypress tests
         id: cypress
         run: npx cypress run --spec "cypress/e2e/{Alert,browser,individual}.cy.js" || true
-
 
       # 5. Merge Mochawesome reports safely
       - name: Merge Mochawesome reports
