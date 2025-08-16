@@ -1,54 +1,82 @@
-name: Cypress Tests with Allure Reports
+name: Cypress Tests with Reports
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch: # allows manual trigger
+  workflow_dispatch:  # manual trigger
 
 jobs:
-  cypress-tests:
+  run-tests:
+    name: Run Cypress Tests
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout repo
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      # 3. Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      # 4. Clean previous Allure results
-      - name: Prepare Allure results folder
+      - name: Prepare report folders
         run: |
-          rm -rf allure-results || true
-          mkdir -p allure-results
+          rm -rf cypress/reports allure-results
+          mkdir -p cypress/reports allure-results
 
-      # 5. Run Cypress tests for Login spec
-      - name: Run Login spec
-        run: npx cypress run --spec "cypress/e2e/component/Login.cy.js" \
-            --reporter @shelex/cypress-allure-plugin
+      - name: Run Cypress tests
+        run: npx cypress run --spec "cypress/e2e/component/{Login,Products}.cy.js" \
+            --reporter mochawesome \
+            --reporter-options "reportDir=cypress/reports,overwrite=true,html=true,json=true"
 
-      # 6. Run Cypress tests for Products spec
-      - name: Run Products spec
-        run: npx cypress run --spec "cypress/e2e/component/Products.cy.js" \
-            --reporter @shelex/cypress-allure-plugin
-
-      # 7. Generate Allure HTML report
-      - name: Generate Allure Report
-        run: |
-          npx allure generate allure-results --clean -o allure-report
-
-      # 8. Upload Allure HTML report as artifact
-      - name: Upload Allure Report
+      - name: Upload test results for next job
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report
-          path: allure-report
+          name: cypress-test-results
+          path: |
+            cypress/reports
+            allure-results
+
+  merge-reports:
+    name: Merge Reports and Generate Allure
+    runs-on: ubuntu-latest
+    needs: run-tests
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: cypress-test-results
+          path: ./test-results
+
+      - name: Merge Mochawesome reports
+        run: |
+          JSON_FILES=$(find ./test-results/cypress/reports -type f -name '*.json' -size +0c)
+          if [ -n "$JSON_FILES" ]; then
+            echo "Merging Mochawesome reports..."
+            npx mochawesome-merge $JSON_FILES > ./test-results/cypress/reports/mochawesome.json
+            npx marge ./test-results/cypress/reports/mochawesome.json -f mochawesome -o ./test-results/cypress/reports
+          else
+            echo "No valid Mochawesome JSON reports found, skipping merge."
+          fi
+
+      - name: Generate Allure report
+        run: |
+          npx allure generate ./test-results/allure-results --clean -o ./test-results/allure-report
+
+      - name: Upload final reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-reports
+          path: ./test-results
