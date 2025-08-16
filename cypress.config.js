@@ -12,7 +12,8 @@ module.exports = defineConfig({
   },
   e2e: {
   env: {
-    allure: true
+    allure: true,
+     allureResultsPath: "test-results/allure-results" // main folder
   },
 
     setupNodeEvents(on, config) {
