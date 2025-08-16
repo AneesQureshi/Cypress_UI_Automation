@@ -1,0 +1,54 @@
+name: Cypress Tests with Allure Reports
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # allows manual trigger
+
+jobs:
+  cypress-tests:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout repo
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Clean previous Allure results
+      - name: Prepare Allure results folder
+        run: |
+          rm -rf allure-results || true
+          mkdir -p allure-results
+
+      # 5. Run Cypress tests for Login spec
+      - name: Run Login spec
+        run: npx cypress run --spec "cypress/e2e/component/Login.cy.js" \
+            --reporter @shelex/cypress-allure-plugin
+
+      # 6. Run Cypress tests for Products spec
+      - name: Run Products spec
+        run: npx cypress run --spec "cypress/e2e/component/Products.cy.js" \
+            --reporter @shelex/cypress-allure-plugin
+
+      # 7. Generate Allure HTML report
+      - name: Generate Allure Report
+        run: |
+          npx allure generate allure-results --clean -o allure-report
+
+      # 8. Upload Allure HTML report as artifact
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
