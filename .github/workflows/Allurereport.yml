@@ -66,15 +66,15 @@ jobs:
 
       - name: Generate Allure Report
         run: |
-          mkdir -p test-results/allure-results
+          mkdir -p /allure-results
           # All specs write to the same allure-results folder
-          allure generate test-results/allure-results -o test-results/allure-report --clean
+          allure generate /allure-results -o /allure-report --clean
 
       - name: Upload Allure report artifact
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
-          path: test-results/allure-report
+          path: /allure-report
 
   # ----------------------------
   # 4️⃣ Send Email via Mailgun

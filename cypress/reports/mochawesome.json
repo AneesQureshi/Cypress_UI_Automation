@@ -5,9 +5,9 @@
     "passes": 2,
     "pending": 0,
     "failures": 0,
-    "start": "2025-08-16T16:34:58.896Z",
-    "end": "2025-08-16T16:35:21.307Z",
-    "duration": 22411,
+    "start": "2025-08-16T17:21:13.492Z",
+    "end": "2025-08-16T17:21:30.018Z",
+    "duration": 16526,
     "testsRegistered": 2,
     "passPercent": 100,
     "pendingPercent": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "7bed04b3-1ace-42d4-9517-5a59695be20d",
+      "uuid": "28e1b001-dfbf-46ac-b2ce-5c557c0158a4",
       "title": "",
       "fullFile": "cypress\\e2e\\component\\Login.cy.js",
       "file": "cypress\\e2e\\component\\Login.cy.js",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "cc86add8-98b6-415d-bdb0-222969850a6c",
+          "uuid": "66c2b935-7294-4878-97a4-3731e7215e2c",
           "title": "Login",
           "fullFile": "",
           "file": "",
@@ -38,17 +38,17 @@
               "title": "Login with valid credentials",
               "fullTitle": "Login Login with valid credentials",
               "timedOut": null,
-              "duration": 12656,
+              "duration": 9371,
               "state": "passed",
-              "speed": "slow",
+              "speed": "medium",
               "pass": true,
               "fail": false,
               "pending": false,
               "context": null,
               "code": "//first page\nlogin.visit();\nlogin.enterEmail('muhammadanish201111@gmail.com');\nlogin.enterPassword('12345678');\nlogin.clickLogin();\n//second page\n// signupdetails.verifyHeader('Enter Account Information');//assertion\nlogin.verifyHeader('AutomationExercise');\nlogin.verifyLogoutLink('Logout');",
               "err": {},
-              "uuid": "2b3ef78b-26d7-47cc-8d27-3559df9ff128",
-              "parentUUID": "cc86add8-98b6-415d-bdb0-222969850a6c",
+              "uuid": "42f9faf4-973b-47e1-811c-cd214a3f5f4f",
+              "parentUUID": "66c2b935-7294-4878-97a4-3731e7215e2c",
               "isHook": false,
               "skipped": false
             },
@@ -56,7 +56,7 @@
               "title": "Login with invalid credentials",
               "fullTitle": "Login Login with invalid credentials",
               "timedOut": null,
-              "duration": 4972,
+              "duration": 2656,
               "state": "passed",
               "speed": "fast",
               "pass": true,
@@ -65,21 +65,21 @@
               "context": null,
               "code": "//first page\nlogin.visit();\nlogin.enterEmail('Invalidmuhammadanish201111@gmail.com');\nlogin.enterPassword('Invalid12345asdf678');\nlogin.clickLogin();\n//second page\n// signupdetails.verifyHeader('Enter Account Information');//assertion\nlogin.verifyInvalidCredentials('AutomationExercise', 'Logout');",
               "err": {},
-              "uuid": "d705d205-0503-4e66-ba19-2415074acf8f",
-              "parentUUID": "cc86add8-98b6-415d-bdb0-222969850a6c",
+              "uuid": "b2c7de5c-c7d7-401d-b7a4-35b8c1492d28",
+              "parentUUID": "66c2b935-7294-4878-97a4-3731e7215e2c",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "2b3ef78b-26d7-47cc-8d27-3559df9ff128",
-            "d705d205-0503-4e66-ba19-2415074acf8f"
+            "42f9faf4-973b-47e1-811c-cd214a3f5f4f",
+            "b2c7de5c-c7d7-401d-b7a4-35b8c1492d28"
           ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 17628,
+          "duration": 12027,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000
