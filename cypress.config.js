@@ -11,12 +11,13 @@ module.exports = defineConfig({
     json: true
   },
   e2e: {
-    screenshotOnRunFailure: true,
-    specPattern: "cypress/e2e/component/*.cy.js",
+  env: {
+    allure: true
+  },
 
     setupNodeEvents(on, config) {
       // 1️⃣ Enable Allure reporting
-      allureWriter(on, config);
+       allureWriter(on, config); // This enables Allure results writing
 
       // 2️⃣ Environment switching
       const envName = config.env.environment || "dev";

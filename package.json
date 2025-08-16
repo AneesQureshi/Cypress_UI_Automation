@@ -186,7 +186,10 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "cypress:run-login": "cypress run --spec cypress/e2e/component/Login.cy.js",
+    "allure:generate": "allure generate ./allure-results --clean -o ./allure-report",
+    "allure:open": "allure open ./allure-report"
   },
   "repository": {
     "type": "git",
