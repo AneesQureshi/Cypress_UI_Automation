@@ -60,16 +60,16 @@ jobs:
           name: cypress-test-results
           path: ./test-results
 
-      - name: Merge Mochawesome reports
-        run: |
-          JSON_FILES=$(find ./test-results/cypress/reports -type f -name '*.json' -size +0c)
-          if [ -n "$JSON_FILES" ]; then
-            echo "Merging Mochawesome reports..."
-            npx mochawesome-merge $JSON_FILES > ./test-results/cypress/reports/mochawesome.json
-            npx marge ./test-results/cypress/reports/mochawesome.json -f mochawesome -o ./test-results/cypress/reports
-          else
-            echo "No valid Mochawesome JSON reports found, skipping merge."
-          fi
+      # - name: Merge Mochawesome reports
+      #   run: |
+      #     JSON_FILES=$(find ./test-results/cypress/reports -type f -name '*.json' -size +0c)
+      #     if [ -n "$JSON_FILES" ]; then
+      #       echo "Merging Mochawesome reports..."
+      #       npx mochawesome-merge $JSON_FILES > ./test-results/cypress/reports/mochawesome.json
+      #       npx marge ./test-results/cypress/reports/mochawesome.json -f mochawesome -o ./test-results/cypress/reports
+      #     else
+      #       echo "No valid Mochawesome JSON reports found, skipping merge."
+      #     fi
 
       - name: Generate Allure report
         run: |
