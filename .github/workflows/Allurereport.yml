@@ -41,6 +41,8 @@ jobs:
 
       # - name: Run Products spec
       #   run: npx cypress run --spec "cypress/e2e/component/Products.cy.js" --reporter-options allureResultsPath=test-results/allure-results
+      - name: List allure results
+        run: ls -R test-results/allure-results || echo "No allure results found"
 
       # ----------------------------
       # Generate Allure Report
