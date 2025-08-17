@@ -8,13 +8,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  # ----------------------------
-  # 1️⃣ Run Login spec
-  # ----------------------------
-  run-login:
+  cypress-allure:
     runs-on: ubuntu-latest
     continue-on-error: true   # Continue even if tests fail
     steps:
+      # ----------------------------
+      # Setup
+      # ----------------------------
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -26,49 +26,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # ----------------------------
+      # Run Cypress specs
+      # ----------------------------
       - name: Run Login spec
-        run: npx cypress run --spec "cypress/e2e/component/Login.cy.js"
-
-  # ----------------------------
-  # 2️⃣ Run Products spec
-  # ----------------------------
-  run-products:
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install dependencies
-        run: npm ci
+        run: npx cypress run --spec "cypress/e2e/component/Login.cy.js" --reporter mocha-allure-reporter --reporter-options allureResultsPath=test-results/allure-results
 
       - name: Run Products spec
-        run: npx cypress run --spec "cypress/e2e/component/Products.cy.js"
+        run: npx cypress run --spec "cypress/e2e/component/Products.cy.js" --reporter mocha-allure-reporter --reporter-options allureResultsPath=test-results/allure-results
 
-  # ----------------------------
-  # 3️⃣ Generate Allure Report
-  # ----------------------------
-  generate-report:
-    runs-on: ubuntu-latest
-    needs: [run-login, run-products]
-    if: always()  # Run even if previous jobs fail
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      # ----------------------------
+      # Generate Allure Report
+      # ----------------------------
       - name: Install Allure CLI
         run: npm install -g allure-commandline
 
       - name: Generate Allure Report
         run: |
-          mkdir -p test-results/allure-results
-
-          # All specs write to the same allure-results folder
           allure generate test-results/allure-results -o test-results/allure-report --clean
 
       - name: Upload Allure report artifact
@@ -77,28 +51,22 @@ jobs:
           name: allure-report
           path: test-results/allure-report
 
-  # ----------------------------
-  # 4️⃣ Send Email via Mailgun
-  # ----------------------------
-  send-email:
-    runs-on: ubuntu-latest
-    needs: generate-report
-    if: always()  # Send email even if report generation failed
-    steps:
+      # ----------------------------
+      # Send Email with Mailgun
+      # ----------------------------
       - name: Send email with Mailgun
+        if: always()
         env:
           MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
           MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
           TO_EMAIL: "muhammadanish2011@gmail.com"
           FROM_EMAIL: "GitHub Actions <no-reply@${{ secrets.MAILGUN_DOMAIN }}>"
         run: |
-          # Ensure attachment exists
           if [ ! -f test-results/allure-report/index.html ]; then
             echo "Allure report not found. Skipping email."
             exit 0
           fi
 
-          # Send email
           curl -s --user "api:$MAILGUN_API_KEY" \
           https://api.mailgun.net/v3/$MAILGUN_DOMAIN/messages \
           -F from="$FROM_EMAIL" \
