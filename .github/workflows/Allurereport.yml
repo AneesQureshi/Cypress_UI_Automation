@@ -88,4 +88,4 @@ jobs:
           to: "passionlifetime@gmail.com"
           from: "cypress@ci.com"
           body: "Cypress run completed. Download attached report."
-          attachments: ./allure-report/index.html
+          attachments: test-results/allure-report/index.html
