@@ -87,7 +87,7 @@ jobs:
           curl -s --user "api:${{ secrets.MAILGUN_API_KEY }}" \
           https://api.mailgun.net/v3/${{ secrets.MAILGUN_DOMAIN }}/messages \
           -F from="GitHub Actions <mailgun@${{ secrets.MAILGUN_DOMAIN }}>" \
-          -F to="yourmail@example.com" \
+          -F to="passionlifetime@gmail.com" \
           -F subject="Cypress Tests Allure Report" \
           -F text="Cypress tests completed. See the attached Allure report." \
           -F attachment=@test-results/allure-report/index.html
