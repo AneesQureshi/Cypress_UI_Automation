@@ -77,17 +77,15 @@ jobs:
           name: allure-report
           path: test-results/allure-report
 
-      - name: Send mail via Mailgun
-        run: |
-          if [ ! -f test-results/allure-report/index.html ]; then
-            echo "Allure report not found. Skipping email."
-            exit 0
-          fi
-
-          curl -s --user "api:${{ secrets.MAILGUN_API_KEY }}" \
-          https://api.mailgun.net/v3/${{ secrets.MAILGUN_DOMAIN }}/messages \
-          -F from="GitHub Actions <mailgun@${{ secrets.MAILGUN_DOMAIN }}>" \
-          -F to="passionlifetime@gmail.com" \
-          -F subject="Cypress Tests Allure Report" \
-          -F text="Cypress tests completed. See the attached Allure report." \
-          -F attachment=@test-results/allure-report/index.html
+      - name: Send email with Mailtrap
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.mailtrap.io
+          server_port: 2525
+          username: ${{ secrets.MAILTRAP_USER }}
+          password: ${{ secrets.MAILTRAP_PASS }}
+          subject: "Cypress Test Report"
+          to: "passionlifetime@gmail.com"
+          from: "cypress@ci.com"
+          body: "Cypress run completed. Download attached report."
+          attachments: ./allure-report/index.html
