@@ -63,23 +63,19 @@ jobs:
       # ----------------------------
       # Send Email with Mailgun
       # ----------------------------
-      - name: Send email with Mailgun
-        if: always()
-        env:
-          MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
-          MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
-          TO_EMAIL: "muhammadanish2011@gmail.com"
-          FROM_EMAIL: "GitHub Actions <no-reply@${{ secrets.MAILGUN_DOMAIN }}>"
-        run: |
-          if [ ! -f test-results/allure-report/index.html ]; then
-            echo "Allure report not found. Skipping email."
-            exit 0
-          fi
+      name: Send Email
 
-          curl -s --user "api:$MAILGUN_API_KEY" \
-          https://api.mailgun.net/v3/$MAILGUN_DOMAIN/messages \
-          -F from="$FROM_EMAIL" \
-          -F to=$TO_EMAIL \
-          -F subject="Cypress Tests Allure Report" \
-          -F text="Cypress tests completed. Allure report attached." \
-          -F attachment=@test-results/allure-report/index.html
+on: [push]
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send mail via Mailgun
+        run: |
+          curl -s --user "api:${{ secrets.MAILGUN_API_KEY }}" \
+          https://api.mailgun.net/v3/${{ secrets.MAILGUN_DOMAIN }}/messages \
+          -F from="GitHub Actions <mailgun@${{ secrets.MAILGUN_DOMAIN }}>" \
+          -F to="yourmail@example.com" \
+          -F subject="Hello from GitHub Actions" \
+          -F text="This is a test email sent from GitHub Actions using Mailgun."
