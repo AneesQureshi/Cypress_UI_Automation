@@ -1,9 +1,11 @@
 name: Cypress on DummyJSON Changes
 
-# Run every 30 minutes (adjust as needed)
 on:
-  schedule:
-    - cron: '*/30 * * * *'
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   run-cypress:
