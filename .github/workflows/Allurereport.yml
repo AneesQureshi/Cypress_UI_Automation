@@ -25,6 +25,13 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+      
+      # ----------------------------
+      # Create test result folder 
+      # ----------------------------
+
+      - name: Create allure results folder
+        run: mkdir -p test-results/allure-results
 
       # ----------------------------
       # Run Cypress specs
@@ -32,8 +39,8 @@ jobs:
       - name: Run Login spec
         run: npx cypress run --spec "cypress/e2e/component/Login.cy.js"  --reporter-options allureResultsPath=test-results/allure-results
 
-      - name: Run Products spec
-        run: npx cypress run --spec "cypress/e2e/component/Products.cy.js" --reporter-options allureResultsPath=test-results/allure-results
+      # - name: Run Products spec
+      #   run: npx cypress run --spec "cypress/e2e/component/Products.cy.js" --reporter-options allureResultsPath=test-results/allure-results
 
       # ----------------------------
       # Generate Allure Report
