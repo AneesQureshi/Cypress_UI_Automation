@@ -30,10 +30,10 @@ jobs:
       # Run Cypress specs
       # ----------------------------
       - name: Run Login spec
-        run: npx cypress run --spec "cypress/e2e/component/Login.cy.js" --reporter mocha-allure-reporter --reporter-options allureResultsPath=test-results/allure-results
+        run: npx cypress run --spec "cypress/e2e/component/Login.cy.js"  --reporter-options allureResultsPath=test-results/allure-results
 
       - name: Run Products spec
-        run: npx cypress run --spec "cypress/e2e/component/Products.cy.js" --reporter mocha-allure-reporter --reporter-options allureResultsPath=test-results/allure-results
+        run: npx cypress run --spec "cypress/e2e/component/Products.cy.js" --reporter-options allureResultsPath=test-results/allure-results
 
       # ----------------------------
       # Generate Allure Report
