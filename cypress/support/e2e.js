@@ -12,9 +12,20 @@
 // You can read more here:
 // https://on.cypress.io/configuration
 // ***********************************************************
+console.log("👉 Loaded support file: cypress/support/e2e.js");
+const registerCypressGrep = require('@cypress/grep')
+registerCypressGrep()
+
+const registerCypressGrepOne = require('@bahmutov/cy-grep')
+registerCypressGrepOne()
+
+
+
+
 
 // Import commands.js using ES2015 syntax:
 import '@shelex/cypress-allure-plugin';
+
 
 import './commands'
 Cypress.on('uncaught:exception', (err, runnable) => {

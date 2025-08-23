@@ -1,6 +1,8 @@
-// cypress.config.cjs
 const { defineConfig } = require("cypress");
-const allureWriter = require('@shelex/cypress-allure-plugin/writer');
+const allureWriter = require("@shelex/cypress-allure-plugin/writer");
+const { tagify } = require("cypress-tags");
+
+
 
 module.exports = defineConfig({
   reporter: "mochawesome",
@@ -8,19 +10,23 @@ module.exports = defineConfig({
     reportDir: "cypress/reports",
     overwrite: true,
     html: true,
-    json: true
+    json: true,
   },
   e2e: {
-  env: {
-    allure: true,
-     allureResultsPath: "test-results/allure-results"
-  },
+    supportFile: "cypress/support/e2e.js",
+
+    env: {
+      allure: true,
+      allureResultsPath: "test-results/allure-results",
+    },
 
     setupNodeEvents(on, config) {
-      // 1️⃣ Enable Allure reporting
-       allureWriter(on, config); // This enables Allure results writing
+      require('@cypress/grep/src/plugin')(config);
+       require('@bahmutov/cy-grep/src/plugin')(config)
+        on('file:preprocessor', tagify(config));
+      allureWriter(on, config);
 
-      // 2️⃣ Environment switching
+      // Env switching
       const envName = config.env.environment || "dev";
       const envUrls = {
         dev: "https://dummyjson.com/products/1",
@@ -31,6 +37,6 @@ module.exports = defineConfig({
       console.log(`Running tests on: ${config.baseUrl}`);
 
       return config;
-    }
+    },
   },
 });
