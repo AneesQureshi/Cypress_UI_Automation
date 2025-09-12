@@ -1,14 +1,16 @@
 {
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.3.0",
+    "@badeball/cypress-cucumber-preprocessor": "^23.1.0",
     "@bahmutov/cy-grep": "^2.0.35",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.5",
     "@cypress/grep": "^4.1.1",
     "@shelex/cypress-allure-plugin": "^2.41.2",
     "allure-commandline": "^2.34.1",
     "cypress": "^14.5.4",
     "cypress-cli-select": "^1.1.5",
     "cypress-file-upload": "^5.0.8",
-    "cypress-tags": "^1.2.2",
+    "esbuild": "^0.25.9",
     "marge": "^1.0.1",
     "mochawesome": "^7.1.3",
     "mochawesome-merge": "^5.0.0",
@@ -207,5 +209,5 @@
     "url": "https://github.com/AneesQureshi/Cypress_UI_Automation/issues"
   },
   "homepage": "https://github.com/AneesQureshi/Cypress_UI_Automation#readme",
-  "description": ""
+  "description": "End-to-end web automation framework built with [Cypress](https://www.cypress.io/).   Covers functional flows such as login, signup, product search, cart, checkout, and validations.   Implements Page Object Model (POM), custom commands, and data-driven testing."
 }
