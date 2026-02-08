@@ -35,8 +35,7 @@ describe('DemoQA Alerts handling', () => {
     AlertPage.stubAlert();
     AlertPage.alertButton.click();
     cy.get('@alertStub').should('have.been.calledOnceWith', 'You clicked a button');
-    cy.log("Hello")
-    cy.log("mainAdded")
+    cy.log("priyaBranch")
   });
   
 });
